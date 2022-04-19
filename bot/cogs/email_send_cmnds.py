@@ -25,7 +25,11 @@ class SendEmails(commands.Cog):
     async def sendmail(self,ctx):
         user = await fetch_users_from_discord_id(self.bot,ctx.message.author)
         if await check_user(ctx,user):
-            await ctx.channel.send(view=ComposeEmailView(user))
+            if ctx.channel.name=="compose":
+                await ctx.channel.send(view=ComposeEmailView(user))
+            else:
+                await ctx.message.delete()
+                await ctx.channel.send("This channel is not for composing emails.\nPlease use #Compose channel.",delete_after=10)
 
 async def setup(bot) -> None:
     await bot.add_cog(SendEmails(bot))

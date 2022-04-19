@@ -97,7 +97,7 @@ class ReadEmails(commands.Cog):
                 await ctx.channel.send("Sorry No Results Found")
 
     @commands.command()
-    async def call_watch(self,ctx):
+    async def call_watch(self,ctx):#user.stop is another command to stop push notification instead of waiting for 7 days
         user = await fetch_users_from_discord_id(self.bot,ctx.message.author)
         if await check_user(ctx,user):
             token = json.loads(user['token'].replace("'",'"'))
@@ -110,7 +110,7 @@ class ReadEmails(commands.Cog):
                 watch_exp = $2
                 WHERE email = $3;
                 """,int(result['historyId']),str(result['expiration']),user['email'])
-                await ctx.channel.send(f"Push Notification Emabled for: {str(ctx.message.author)}")
+                await ctx.channel.send(f"Push Notification Enabled for: {str(ctx.message.author)}")
             else:
                 await ctx.channel.send('Some error occured while emabling push notificaitons for your email')
 

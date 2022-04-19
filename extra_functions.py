@@ -27,10 +27,11 @@ def parse_mail(payld):
     mail = re.sub('   +',' ',mail)
     return mail
 
-async def check_user(ctx,user,new_auth=False):
+async def check_user(ctx,user,new_auth=False,deauth=False):
     if user:
-        if user['token']!=None or new_auth:
-            return True
+        if user['token']!=None or new_auth:return True
+        elif user['token']!=None and deauth:return True
+        elif user['token']==None and deauth:ctx.channel.send("You are already deauthorized.Please send .new_auth for new authorization")
         else:await ctx.channel.send("You are not authorized. Please send '.new_auth' to start the process of authorization")
     else:await ctx.channel.send("Please send '.Hello' in general chat in bot server to start the process of authorization.")
     return False
