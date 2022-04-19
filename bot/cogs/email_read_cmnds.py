@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from gmail.gmail_cmnds import service
-from extra_functions import longer_msg, send_embed,check_user
+from extra_functions import email_button, longer_msg, send_embed,check_user
 from database_functions import fetch_users_from_discord_id
 import json
 
@@ -50,14 +50,16 @@ class ReadEmails(commands.Cog):
             service_obj = service(token)
             mail = service_obj.get_emails()
             for i in mail:
+                print(i['id'])
                 mail_content = service_obj.get_message(i['id'],True)
                 message=''
                 try:
-                    for i in mail_content.keys():
-                        if 'body'==i:
+                    for j in mail_content.keys():
+                        if 'body'==j:
                             continue
-                        message+=f"\n[{i}]: {mail_content[i]}"
-                    await ctx.channel.send(f"```ini\n{message}```")
+                        message+=f"\n[{j}]: {mail_content[j]}"
+                    email_link = await email_button(i['id'])
+                    await ctx.channel.send(f"```ini\n{message}```",view=email_link)
                     if "body" in mail_content.keys():
                         if len(mail_content['body'])<2000:
                             await ctx.channel.send(f"{mail_content['body']}")
@@ -75,9 +77,10 @@ class ReadEmails(commands.Cog):
             for i in mail:
                 mail_content = service_obj.get_message(i['id'])
                 message=''
+                email_link = await email_button(i['id'])
                 for i in mail_content.keys():
                     message+=f"\n[{i}]: {mail_content[i]}"
-                await ctx.channel.send(f"```ini\n{message}```")
+                await ctx.channel.send(f"```ini\n{message}```",view=email_link)
         
     @commands.command()
     async def search(self,ctx,*search_string):
@@ -90,9 +93,10 @@ class ReadEmails(commands.Cog):
                 for i in mail['messages']:
                     mail_content = service_obj.get_message(i['id'],False)
                     message=''
+                    email_link = await email_button(i['id'])
                     for i in mail_content.keys():
                         message+=f"\n[{i}]: {mail_content[i]}"
-                    await ctx.channel.send(f"```ini\n{message}```")
+                    await ctx.channel.send(f"```ini\n{message}```",view=email_link)
             else:
                 await ctx.channel.send("Sorry No Results Found")
 

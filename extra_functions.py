@@ -4,6 +4,7 @@ import json
 from discord.errors import Forbidden
 import re
 import html2text
+import discord
 
 def parse_mail(payld):
     if 'parts' in payld.keys():
@@ -68,6 +69,15 @@ def create_message(sender, to, subject, message_text):
     message['subject'] = subject
     raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
     return {'raw': raw}
+
+async def email_button(id):
+    email_link = discord.ui.View()
+    item = discord.ui.Button(
+            label="Open Email",
+            url=f"https://mail.google.com/mail/u/0/#all/{id}"
+        )
+    email_link.add_item(item=item)
+    return email_link
 
 async def send_embed(ctx, embed):
     """
