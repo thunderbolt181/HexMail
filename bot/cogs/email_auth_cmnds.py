@@ -1,4 +1,3 @@
-from multiprocessing import synchronize
 import os
 import discord
 import json
@@ -79,8 +78,8 @@ class Authorization(commands.Cog):
             user = await fetch_users_from_discord_id(self.bot,ctx.message.author)
             if await check_user(ctx,user,deauth=True):
                 delete = await delete_user_token(self.bot,email)
-                if delete:ctx.channel.send(f"Email:{user['email']} is deauthorized.")
-                else:ctx.channel.send(f"Failed.\nEmail:{email} was not authorized.")
+                if delete:await ctx.channel.send(f"Email:{email} is deauthorized.")
+                else:await ctx.channel.send(f"Failed.\nEmail:{email} was not authorized.")
         else:
             await ctx.channel.send(f"Sorry {ctx.message.author}. You do Not have required permissions")
 
