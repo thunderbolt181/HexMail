@@ -2,5 +2,4 @@
 .env
 __pycache__
 credentials.json
-token.json
 pub_sub_token.json
